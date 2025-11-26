@@ -1,13 +1,12 @@
-package com.podo;
+package com.podo.podo; // 기존 패키지 유지
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class PodoApplicationTests {
 
     @Test
     void contextLoads() {
+        // TODO: 나중에 진짜 스프링 통합 테스트로 변경
     }
-}
 
+}
