@@ -1,103 +1,131 @@
 {
-    "projectRules": [
-      {
-        "description": "Use Hybrid DDD structure with adapter / application / domain / infrastructure layers.",
-        "patterns": {
-          "adapter": ["src/main/java/**/adapter/**"],
-          "application": ["src/main/java/**/application/**"],
-          "domain": ["src/main/java/**/domain/**"],
-          "infrastructure": ["src/main/java/**/infrastructure/**"]
-        },
-        "layers": [
-          {
-            "name": "domain",
-            "allowed": [
-              "Entities",
-              "Aggregates",
-              "Value Objects",
-              "Domain Services",
-              "Domain Events",
-              "Repository Interfaces (Ports)"
-            ],
-            "forbidden": [
-              "Spring Web annotations (@RestController, @Controller)",
-              "Spring stereotypes (@Service, @Repository, @Component)",
-              "JPA annotations (@Entity, @Table, @Id)",
-              "Framework-specific code or configuration"
-            ],
-            "notes": [
-              "Domain code should be pure Java and not depend on Spring or infrastructure.",
-              "Favor immutability and rich domain models."
-            ]
-          },
-          {
-            "name": "application",
-            "allowed": [
-              "Application Services (UseCases)",
-              "Transactional orchestration",
-              "Calling domain services and repositories",
-              "Input/Output models for use cases (not API DTOs)"
-            ],
-            "forbidden": [
-              "Direct database access",
-              "JPA entities or repositories",
-              "REST controller annotations"
-            ],
-            "notes": [
-              "Application layer coordinates use cases and defines transactional boundaries.",
-              "Classes in this layer may use @Service if needed, but should not contain persistence logic."
-            ]
-          },
-          {
-            "name": "adapter",
-            "allowed": [
-              "REST Controllers",
-              "Message listeners/consumers",
-              "HTTP/JSON request and response DTOs",
-              "Mapping from API/transport DTOs to application layer models"
-            ],
-            "forbidden": [
-              "Domain business logic",
-              "Direct database access",
-              "JPA entities"
-            ],
-            "notes": [
-              "Adapters translate from external protocols (HTTP, message queues, etc.) to application layer calls.",
-              "REST controllers should depend on application services, not on domain or infrastructure directly."
-            ]
-          },
-          {
-            "name": "infrastructure",
-            "allowed": [
-              "JPA Entities",
-              "Spring Data repositories",
-              "Repository implementations for domain ports",
-              "External API clients",
-              "Configuration classes related to persistence or external systems"
-            ],
-            "forbidden": [
-              "REST controllers",
-              "Domain business rules"
-            ],
-            "notes": [
-              "Infrastructure is allowed to depend on Spring and external libraries.",
-              "This layer implements the ports defined in the domain layer."
-            ]
-          }
-        ]
+  "projectRules": [
+    {
+      "description": "Use Hybrid DDD structure with Mediator pattern: Bounded Context as top-level package, then layers underneath.",
+      "patterns": {
+        "boundedContexts": ["messageorchestrator", "babylifelog", "conversation", "advice"],
+        "layers": ["adapter", "application", "domain", "infrastructure"],
+        "shared": ["shared"]
       },
-      {
-        "description": "General conventions for the Podo project starter.",
-        "rules": [
-          "Use constructor injection for dependencies. Prefer Lombok @RequiredArgsConstructor if Lombok is enabled.",
-          "Avoid field injection (@Autowired on fields).",
-          "Domain classes should not use Spring or JPA annotations.",
-          "Repository interfaces for the domain should be defined in the domain layer as ports (e.g., BabyRecordRepository).",
-          "Infrastructure layer should implement domain repository ports (e.g., BabyRecordRepositoryImpl) and internally use Spring Data JPA repositories.",
-          "REST controllers should live under the adapter layer and depend on application services, not on domain or infrastructure directly.",
-          "Use clear naming: *UseCase or *Service in application layer, *Controller or *Adapter in adapter layer, *RepositoryImpl or *JpaRepository in infrastructure.",
-          "Mapping between layers (e.g., domain <-> adapter DTOs) should be done explicitly in mapper classes or methods, not inside controllers or entities."
-        ]
+      "structure": "com.podo.<boundedContext>.<layer>",
+      "examples": [
+        "com.podo.babylifelog.adapter",
+        "com.podo.babylifelog.application.request",
+        "com.podo.babylifelog.application.response",
+        "com.podo.babylifelog.application.handler",
+        "com.podo.babylifelog.domain",
+        "com.podo.babylifelog.infrastructure",
+        "com.podo.shared.mediator"
+      ],
+      "layers": [
+        {
+          "name": "domain",
+          "allowed": [
+            "Entities",
+            "Aggregates",
+            "Value Objects",
+            "Domain Services",
+            "Domain Events",
+            "Repository Interfaces (Ports)"
+          ],
+          "forbidden": [
+            "Spring Web annotations (@RestController, @Controller)",
+            "Spring stereotypes (@Service, @Repository, @Component)",
+            "JPA annotations (@Entity, @Table, @Id)",
+            "Framework-specific code or configuration"
+          ],
+          "notes": [
+            "Domain code should be pure Java and not depend on Spring or infrastructure.",
+            "Favor immutability and rich domain models."
+          ]
+        },
+        {
+          "name": "application",
+          "subPackages": ["request", "response", "handler"],
+          "allowed": [
+            "Request DTOs (implements Request<TResponse>)",
+            "Response DTOs",
+            "RequestHandlers (implements RequestHandler<TRequest, TResponse>)",
+            "Transactional orchestration",
+            "Calling domain services and repositories"
+          ],
+          "forbidden": [
+            "Direct database access",
+            "JPA entities or repositories",
+            "REST controller annotations"
+          ],
+          "notes": [
+            "Use Mediator pattern: Request -> Handler -> Response",
+            "Each use case has its own Request and Handler",
+            "Handlers may use @Component and @Transactional"
+          ]
+        },
+        {
+          "name": "adapter",
+          "allowed": [
+            "REST Controllers",
+            "Message listeners/consumers",
+            "Inject Mediator and dispatch requests"
+          ],
+          "forbidden": [
+            "Domain business logic",
+            "Direct database access",
+            "JPA entities"
+          ],
+          "notes": [
+            "Controllers should only receive HTTP requests and dispatch to Mediator",
+            "Controllers should be thin - just map HTTP to Request objects"
+          ]
+        },
+        {
+          "name": "infrastructure",
+          "allowed": [
+            "JPA Entities",
+            "Spring Data repositories",
+            "Repository implementations for domain ports",
+            "External API clients",
+            "Configuration classes related to persistence or external systems"
+          ],
+          "forbidden": [
+            "REST controllers",
+            "Domain business rules"
+          ],
+          "notes": [
+            "Infrastructure is allowed to depend on Spring and external libraries.",
+            "This layer implements the ports defined in the domain layer."
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Mediator Pattern for Application Layer",
+      "rules": [
+        "All use cases are represented as Request objects (e.g., RecordBabyLifeLogRequest)",
+        "Request objects implement Request<TResponse> interface",
+        "Each Request has exactly one Handler (e.g., RecordBabyLifeLogHandler)",
+        "Handlers implement RequestHandler<TRequest, TResponse> interface",
+        "Controllers inject Mediator and call mediator.send(request)",
+        "Response objects should have static factory methods from domain entities"
+      ],
+      "naming": {
+        "request": "*Request.java in application/request/",
+        "response": "*Response.java in application/response/",
+        "handler": "*Handler.java in application/handler/"
       }
-    ]
-  }
+    },
+    {
+      "description": "General conventions for the Podo Baby Assistant project.",
+      "rules": [
+        "Root package is com.podo (NOT com.podo.podo).",
+        "Bounded contexts are the first-level packages under com.podo.",
+        "Shared kernel (Mediator, common interfaces) lives in com.podo.shared.",
+        "Use constructor injection for dependencies. Prefer Lombok @RequiredArgsConstructor.",
+        "Avoid field injection (@Autowired on fields).",
+        "Domain classes should not use Spring or JPA annotations.",
+        "Repository interfaces for the domain should be defined in the domain layer as ports.",
+        "Infrastructure layer should implement domain repository ports.",
+        "REST controllers should live under the adapter layer and only depend on Mediator."
+      ]
+    }
+  ]
+}
