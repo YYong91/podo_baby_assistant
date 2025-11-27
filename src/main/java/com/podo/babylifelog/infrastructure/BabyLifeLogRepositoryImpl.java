@@ -1,75 +1,91 @@
 package com.podo.babylifelog.infrastructure;
 
-import com.podo.babylifelog.domain.BabyLifeLog;
+import com.podo.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.babylifelog.domain.BabyLifeLogRepository;
-import com.podo.babylifelog.domain.LogType;
-import lombok.RequiredArgsConstructor;
+import com.podo.babylifelog.domain.BabyLifeLogType;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Implementation of BabyLifeLogRepository port.
  * Bridges domain repository interface with Spring Data JPA.
  */
 @Repository
-@RequiredArgsConstructor
 public class BabyLifeLogRepositoryImpl implements BabyLifeLogRepository {
 
     private final BabyLifeLogJpaRepository jpaRepository;
 
+    public BabyLifeLogRepositoryImpl(BabyLifeLogJpaRepository jpaRepository) {
+        this.jpaRepository = jpaRepository;
+    }
+
     @Override
-    public BabyLifeLog save(BabyLifeLog babyLifeLog) {
-        BabyLifeLogJpaEntity entity = toEntity(babyLifeLog);
+    public BabyLifeLogRecord save(BabyLifeLogRecord record) {
+        BabyLifeLogJpaEntity entity = toEntity(record);
         BabyLifeLogJpaEntity saved = jpaRepository.save(entity);
         return toDomain(saved);
     }
 
     @Override
-    public Optional<BabyLifeLog> findById(Long id) {
+    public Optional<BabyLifeLogRecord> findById(UUID id) {
         return jpaRepository.findById(id).map(this::toDomain);
     }
 
     @Override
-    public List<BabyLifeLog> findAll() {
-        return jpaRepository.findAll().stream().map(this::toDomain).toList();
+    public List<BabyLifeLogRecord> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override
-    public List<BabyLifeLog> findByLogType(LogType logType) {
-        return jpaRepository.findByLogType(logType.name()).stream().map(this::toDomain).toList();
+    public List<BabyLifeLogRecord> findByOccurredAtBetween(LocalDateTime start, LocalDateTime end) {
+        return jpaRepository.findByOccurredAtBetween(start, end).stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override
-    public List<BabyLifeLog> findByOccurredAtBetween(LocalDateTime start, LocalDateTime end) {
-        return jpaRepository.findByOccurredAtBetween(start, end).stream().map(this::toDomain).toList();
+    public List<BabyLifeLogRecord> findByTypeAndOccurredAtBetween(BabyLifeLogType type, LocalDateTime start, LocalDateTime end) {
+        return jpaRepository.findByTypeAndOccurredAtBetween(type, start, end).stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override
-    public void delete(BabyLifeLog babyLifeLog) {
-        jpaRepository.deleteById(babyLifeLog.getId());
+    public Optional<BabyLifeLogRecord> findByType(BabyLifeLogType type) {
+        return jpaRepository.findFirstByType(type).map(this::toDomain);
     }
 
-    private BabyLifeLogJpaEntity toEntity(BabyLifeLog domain) {
+    @Override
+    public void delete(BabyLifeLogRecord record) {
+        jpaRepository.deleteById(record.getId());
+    }
+
+    @Override
+    public void deleteAll() {
+        jpaRepository.deleteAll();
+    }
+
+    private BabyLifeLogJpaEntity toEntity(BabyLifeLogRecord record) {
         return new BabyLifeLogJpaEntity(
-            domain.getId(),
-            domain.getLogType().name(),
-            domain.getDescription(),
-            domain.getOccurredAt(),
-            domain.getCreatedAt()
+                record.getId(),
+                record.getType(),
+                record.getContent(),
+                record.getOccurredAt()
         );
     }
 
-    private BabyLifeLog toDomain(BabyLifeLogJpaEntity entity) {
-        return BabyLifeLog.reconstitute(
-            entity.getId(),
-            LogType.valueOf(entity.getLogType()),
-            entity.getDescription(),
-            entity.getOccurredAt(),
-            entity.getCreatedAt()
+    private BabyLifeLogRecord toDomain(BabyLifeLogJpaEntity entity) {
+        return BabyLifeLogRecord.reconstitute(
+                entity.getId(),
+                entity.getType(),
+                entity.getContent(),
+                entity.getOccurredAt()
         );
     }
 }
-

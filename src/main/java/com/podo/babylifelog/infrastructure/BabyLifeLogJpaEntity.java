@@ -1,61 +1,68 @@
 package com.podo.babylifelog.infrastructure;
 
+import com.podo.babylifelog.domain.BabyLifeLogType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * JPA entity for BabyLifeLog persistence.
  */
 @Entity
-@Table(name = "baby_life_logs")
+@Table(name = "baby_life_log_record")
 public class BabyLifeLogJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String logType;
+    private BabyLifeLogType type;
 
     @Column(length = 1000)
-    private String description;
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime occurredAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     protected BabyLifeLogJpaEntity() {
     }
 
-    public BabyLifeLogJpaEntity(Long id, String logType, String description,
-                                 LocalDateTime occurredAt, LocalDateTime createdAt) {
+    public BabyLifeLogJpaEntity(UUID id, BabyLifeLogType type, String content,
+                                 LocalDateTime occurredAt) {
         this.id = id;
-        this.logType = logType;
-        this.description = description;
+        this.type = type;
+        this.content = content;
         this.occurredAt = occurredAt;
-        this.createdAt = createdAt;
+        // createdAt, updatedAt은 JPA(Hibernate)에서 @CreationTimestamp, @UpdateTimestamp로 자동 관리됩니다.
+        // 생성자에서 직접 할당할 필요가 없습니다.
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public String getLogType() {
-        return logType;
+    public BabyLifeLogType getType() {
+        return type;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
     public LocalDateTime getOccurredAt() {
         return occurredAt;
     }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 }
-

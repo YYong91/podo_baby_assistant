@@ -1,38 +1,34 @@
 package com.podo.babylifelog.application.handler;
 
-import com.podo.babylifelog.application.request.RecordBabyLifeLogRequest;
+import com.podo.babylifelog.application.command.RecordBabyLifeLogCommand;
 import com.podo.babylifelog.application.response.BabyLifeLogResponse;
-import com.podo.babylifelog.domain.BabyLifeLog;
+import com.podo.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.babylifelog.domain.BabyLifeLogRepository;
-import com.podo.babylifelog.domain.LogType;
 import com.podo.shared.mediator.RequestHandler;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Handler for RecordBabyLifeLogRequest.
+ * Handler for recording a new baby life log entry.
  */
 @Component
-@RequiredArgsConstructor
-public class RecordBabyLifeLogHandler 
-    implements RequestHandler<RecordBabyLifeLogRequest, BabyLifeLogResponse> {
+@Transactional
+public class RecordBabyLifeLogHandler implements RequestHandler<RecordBabyLifeLogCommand, BabyLifeLogResponse> {
 
-    private final BabyLifeLogRepository babyLifeLogRepository;
+    private final BabyLifeLogRepository repository;
+
+    public RecordBabyLifeLogHandler(BabyLifeLogRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
-    @Transactional
-    public BabyLifeLogResponse handle(RecordBabyLifeLogRequest request) {
-        LogType logType = LogType.valueOf(request.logType());
-        
-        BabyLifeLog log = BabyLifeLog.create(
-            logType,
-            request.description(),
-            request.occurredAt()
+    public BabyLifeLogResponse handle(RecordBabyLifeLogCommand command) {
+        BabyLifeLogRecord record = BabyLifeLogRecord.create(
+                command.type(),
+                command.content(),
+                command.occurredAt()
         );
-        
-        BabyLifeLog saved = babyLifeLogRepository.save(log);
+        BabyLifeLogRecord saved = repository.save(record);
         return BabyLifeLogResponse.from(saved);
     }
 }
-

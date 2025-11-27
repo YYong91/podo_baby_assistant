@@ -1,13 +1,15 @@
 package com.podo.babylifelog.adapter;
 
-import com.podo.babylifelog.application.request.GetAllBabyLifeLogsRequest;
-import com.podo.babylifelog.application.request.GetBabyLifeLogRequest;
-import com.podo.babylifelog.application.request.RecordBabyLifeLogRequest;
+import com.podo.babylifelog.application.command.RecordBabyLifeLogCommand;
+import com.podo.babylifelog.application.query.GetAllBabyLifeLogsQuery;
+import com.podo.babylifelog.application.query.GetBabyLifeLogQuery;
 import com.podo.babylifelog.application.response.BabyLifeLogListResponse;
 import com.podo.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.shared.mediator.Mediator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 /**
  * REST endpoints for baby life log CRUD operations.
@@ -21,17 +23,17 @@ public class BabyLifeLogController {
     private final Mediator mediator;
 
     @PostMapping
-    public BabyLifeLogResponse create(@RequestBody RecordBabyLifeLogRequest request) {
-        return mediator.send(request);
+    public BabyLifeLogResponse create(@RequestBody RecordBabyLifeLogCommand command) {
+        return mediator.send(command);
     }
 
     @GetMapping
     public BabyLifeLogListResponse getAll() {
-        return mediator.send(new GetAllBabyLifeLogsRequest());
+        return mediator.send(new GetAllBabyLifeLogsQuery());
     }
 
     @GetMapping("/{id}")
-    public BabyLifeLogResponse getById(@PathVariable Long id) {
-        return mediator.send(new GetBabyLifeLogRequest(id));
+    public BabyLifeLogResponse getById(@PathVariable UUID id) {
+        return mediator.send(new GetBabyLifeLogQuery(id));
     }
 }

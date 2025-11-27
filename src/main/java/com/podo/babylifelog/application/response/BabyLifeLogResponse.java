@@ -1,29 +1,29 @@
 package com.podo.babylifelog.application.response;
 
-import com.podo.babylifelog.domain.BabyLifeLog;
+import com.podo.babylifelog.domain.BabyLifeLogRecord;
+import com.podo.babylifelog.domain.BabyLifeLogType;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
- * Response DTO for baby life log queries.
+ * Response DTO for a single baby life log entry.
  */
 public record BabyLifeLogResponse(
-    Long id,
-    String logType,
-    String description,
-    LocalDateTime occurredAt,
-    LocalDateTime createdAt
+        UUID id,
+        BabyLifeLogType type,
+        String content,
+        LocalDateTime occurredAt
 ) {
     /**
-     * Factory method to create response from domain entity.
+     * Factory method to create a response from a domain entity.
      */
-    public static BabyLifeLogResponse from(BabyLifeLog domain) {
+    public static BabyLifeLogResponse from(BabyLifeLogRecord record) {
         return new BabyLifeLogResponse(
-            domain.getId(),
-            domain.getLogType().name(),
-            domain.getDescription(),
-            domain.getOccurredAt(),
-            domain.getCreatedAt()
+                record.getId(),
+                record.getType(),
+                record.getContent(),
+                record.getOccurredAt()
         );
     }
 }

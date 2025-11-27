@@ -1,4 +1,4 @@
-package com.podo.podo; // 기존 패키지 유지
+package com.podo; // 기존 패키지 유지
 
 import org.junit.jupiter.api.Test;
 

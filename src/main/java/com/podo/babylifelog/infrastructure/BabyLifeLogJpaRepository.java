@@ -1,19 +1,21 @@
 package com.podo.babylifelog.infrastructure;
 
+import com.podo.babylifelog.domain.BabyLifeLogType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Spring Data JPA repository for BabyLifeLogJpaEntity.
  */
-@Repository
-public interface BabyLifeLogJpaRepository extends JpaRepository<BabyLifeLogJpaEntity, Long> {
-
-    List<BabyLifeLogJpaEntity> findByLogType(String logType);
+public interface BabyLifeLogJpaRepository extends JpaRepository<BabyLifeLogJpaEntity, UUID> {
 
     List<BabyLifeLogJpaEntity> findByOccurredAtBetween(LocalDateTime start, LocalDateTime end);
-}
 
+    List<BabyLifeLogJpaEntity> findByTypeAndOccurredAtBetween(BabyLifeLogType type, LocalDateTime start, LocalDateTime end);
+
+    Optional<BabyLifeLogJpaEntity> findFirstByType(BabyLifeLogType type);
+}
