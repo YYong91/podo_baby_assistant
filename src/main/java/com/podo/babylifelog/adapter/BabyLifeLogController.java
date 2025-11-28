@@ -7,6 +7,8 @@ import com.podo.babylifelog.application.response.BabyLifeLogListResponse;
 import com.podo.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.shared.mediator.Mediator;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -33,7 +35,7 @@ public class BabyLifeLogController {
     }
 
     @GetMapping("/{id}")
-    public BabyLifeLogResponse getById(@PathVariable UUID id) {
+    public BabyLifeLogResponse getById(@PathVariable @NonNull UUID id) {
         return mediator.send(new GetBabyLifeLogQuery(id));
     }
 }
