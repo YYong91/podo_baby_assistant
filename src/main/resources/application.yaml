@@ -1,3 +1,19 @@
 spring:
   application:
     name: podo
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/podo
+    username: podouser
+    password: podopass
+
+  jpa:
+    hibernate:
+      ddl-auto: update      # 개발 단계: 테이블 자동 생성/수정
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+server:
+  port: 8080
