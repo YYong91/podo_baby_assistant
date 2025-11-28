@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BabyLifeLogRecordTest {
 
     @Test
-    void createNew_shouldSetCreatedAtToNow() {
+    void create_shouldPopulateFields() {
         BabyLifeLogRecord record = BabyLifeLogRecord.create(
                 BabyLifeLogType.FEEDING,
                 "Baby had milk",

@@ -1,6 +1,5 @@
-package com.podo.shared;
+package com.podo.shared.domain;
 
-import com.podo.shared.domain.EntityBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -9,13 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EntityBaseTest {
 
-    // Concrete implementation for testing
     private static class TestEntity extends EntityBase {
-        public TestEntity() {
+        TestEntity() {
             super();
         }
 
-        public TestEntity(UUID id) {
+        TestEntity(UUID id) {
             super(id);
         }
     }
