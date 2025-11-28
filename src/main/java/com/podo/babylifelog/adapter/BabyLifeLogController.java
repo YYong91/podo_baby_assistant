@@ -1,6 +1,6 @@
 package com.podo.babylifelog.adapter;
 
-import com.podo.babylifelog.application.commands.RecordBabyLifeLogCommand;
+import com.podo.babylifelog.application.commands.CreateBabyLifeLogCommand;
 import com.podo.babylifelog.application.queries.GetAllBabyLifeLogsQuery;
 import com.podo.babylifelog.application.queries.GetBabyLifeLogQuery;
 import com.podo.babylifelog.application.response.BabyLifeLogListResponse;
@@ -25,7 +25,7 @@ public class BabyLifeLogController {
     private final Mediator mediator;
 
     @PostMapping
-    public BabyLifeLogResponse create(@RequestBody RecordBabyLifeLogCommand command) {
+    public BabyLifeLogResponse create(@RequestBody CreateBabyLifeLogCommand command) {
         return mediator.send(command);
     }
 

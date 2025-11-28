@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * Command to record a new baby life log entry.
  */
-public record RecordBabyLifeLogCommand(
+public record CreateBabyLifeLogCommand(
         BabyLifeLogType type,
         String content,
         LocalDateTime occurredAt
