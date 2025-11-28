@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: podo-postgres
+    environment:
+      POSTGRES_DB: podo
+      POSTGRES_USER: podouser
+      POSTGRES_PASSWORD: podopass
+    ports:
+      - "5432:5432"
+    volumes:
+      - podo-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  podo-postgres-data:
