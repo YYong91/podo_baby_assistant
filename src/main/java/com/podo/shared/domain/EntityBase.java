@@ -3,6 +3,8 @@ package com.podo.shared.domain;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
+
 /**
  * Abstract base class for all domain entities.
  * Provides UUID-based identity and equality semantics.
@@ -19,6 +21,8 @@ public abstract class EntityBase {
         this.id = id;
     }
 
+    @SuppressWarnings("null")
+    @NonNull
     public UUID getId() {
         return id;
     }
