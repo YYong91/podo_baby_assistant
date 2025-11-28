@@ -1,4 +1,4 @@
-package com.podo.babylifelog.domain;
+package com.podo.shared;
 
 import com.podo.shared.domain.EntityBase;
 import org.junit.jupiter.api.Test;
