@@ -1,8 +1,8 @@
 package com.podo.babylifelog.adapter;
 
-import com.podo.babylifelog.application.command.RecordBabyLifeLogCommand;
-import com.podo.babylifelog.application.query.GetAllBabyLifeLogsQuery;
-import com.podo.babylifelog.application.query.GetBabyLifeLogQuery;
+import com.podo.babylifelog.application.commands.RecordBabyLifeLogCommand;
+import com.podo.babylifelog.application.queries.GetAllBabyLifeLogsQuery;
+import com.podo.babylifelog.application.queries.GetBabyLifeLogQuery;
 import com.podo.babylifelog.application.response.BabyLifeLogListResponse;
 import com.podo.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.shared.mediator.Mediator;

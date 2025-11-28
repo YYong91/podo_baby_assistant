@@ -16,7 +16,7 @@ import java.util.UUID;
 public class BabyLifeLogJpaEntity {
 
     @Id
-    @Column(columnDefinition = "uuid")
+    @Column(nullable = false, columnDefinition = "uuid")
     private UUID id;
 
     @Enumerated(EnumType.STRING)

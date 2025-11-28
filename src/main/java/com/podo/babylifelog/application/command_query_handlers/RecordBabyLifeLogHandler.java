@@ -1,6 +1,6 @@
-package com.podo.babylifelog.application.handler;
+package com.podo.babylifelog.application.command_query_handlers;
 
-import com.podo.babylifelog.application.command.RecordBabyLifeLogCommand;
+import com.podo.babylifelog.application.commands.RecordBabyLifeLogCommand;
 import com.podo.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.babylifelog.domain.BabyLifeLogRepository;

@@ -1,4 +1,4 @@
-package com.podo.babylifelog.application.command;
+package com.podo.babylifelog.application.commands;
 
 import com.podo.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.babylifelog.domain.BabyLifeLogType;

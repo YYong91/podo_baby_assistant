@@ -1,6 +1,6 @@
-package com.podo.babylifelog.application.handler;
+package com.podo.babylifelog.application.command_query_handlers;
 
-import com.podo.babylifelog.application.query.GetAllBabyLifeLogsQuery;
+import com.podo.babylifelog.application.queries.GetAllBabyLifeLogsQuery;
 import com.podo.babylifelog.application.response.BabyLifeLogListResponse;
 import com.podo.babylifelog.domain.BabyLifeLogRepository;
 import com.podo.shared.mediator.RequestHandler;
@@ -24,4 +24,4 @@ public class GetAllBabyLifeLogsHandler implements RequestHandler<GetAllBabyLifeL
     public BabyLifeLogListResponse handle(GetAllBabyLifeLogsQuery query) {
         return BabyLifeLogListResponse.from(repository.findAll());
     }
-}
+        }

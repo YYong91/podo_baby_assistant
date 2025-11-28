@@ -3,10 +3,13 @@ package com.podo.babylifelog.infrastructure;
 import com.podo.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.babylifelog.domain.BabyLifeLogRepository;
 import com.podo.babylifelog.domain.BabyLifeLogType;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,7 +34,7 @@ public class BabyLifeLogRepositoryImpl implements BabyLifeLogRepository {
     }
 
     @Override
-    public Optional<BabyLifeLogRecord> findById(UUID id) {
+    public Optional<BabyLifeLogRecord> findById(@NonNull UUID id) {
         return jpaRepository.findById(id).map(this::toDomain);
     }
 
@@ -63,14 +66,16 @@ public class BabyLifeLogRepositoryImpl implements BabyLifeLogRepository {
 
     @Override
     public void delete(BabyLifeLogRecord record) {
-        jpaRepository.deleteById(record.getId());
+        UUID id = Objects.requireNonNull(record.getId(), "record id must not be null");
+        jpaRepository.deleteById(id);
     }
 
     @Override
     public void deleteAll() {
         jpaRepository.deleteAll();
     }
-
+    
+    @NonNull
     private BabyLifeLogJpaEntity toEntity(BabyLifeLogRecord record) {
         return new BabyLifeLogJpaEntity(
                 record.getId(),
