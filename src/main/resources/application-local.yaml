@@ -1,0 +1,6 @@
+# application-local.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/podo
+    username: podouser
+    password: podopass
