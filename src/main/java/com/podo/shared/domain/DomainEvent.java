@@ -1,15 +1,10 @@
 package com.podo.shared.domain;
 
-import java.time.Instant;
+import com.podo.shared.mediator.Request;
 
 /**
  * Marker interface for domain events emitted by aggregates.
+ * Extends {@link Request} so events can be dispatched via {@code mediator.send(event)}.
  */
-public interface DomainEvent {
-
-    /**
-     * @return Timestamp describing when the event occurred.
-     */
-    Instant occurredOn();
+public interface DomainEvent extends Request<Void> {
 }
-
