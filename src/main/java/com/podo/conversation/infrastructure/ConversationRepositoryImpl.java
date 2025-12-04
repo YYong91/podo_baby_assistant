@@ -3,12 +3,13 @@ package com.podo.conversation.infrastructure;
 import com.podo.conversation.domain.Conversation;
 import com.podo.conversation.domain.ConversationMessage;
 import com.podo.conversation.domain.ConversationRepository;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Implementation of ConversationRepository port.
@@ -16,6 +17,7 @@ import java.util.Optional;
  */
 @Repository
 @RequiredArgsConstructor
+@SuppressWarnings("NullAway")
 public class ConversationRepositoryImpl implements ConversationRepository {
 
     private final ConversationJpaRepository jpaRepository;
@@ -28,8 +30,9 @@ public class ConversationRepositoryImpl implements ConversationRepository {
     }
 
     @Override
-    public Optional<Conversation> findById(String id) {
-        return jpaRepository.findById(id).map(this::toDomain);
+    public Optional<Conversation> findById(UUID id) {
+        UUID safeId = Objects.requireNonNull(id, "conversation id must not be null");
+        return jpaRepository.findById(safeId).map(this::toDomain);
     }
 
     @Override
@@ -42,19 +45,21 @@ public class ConversationRepositoryImpl implements ConversationRepository {
 
     @Override
     public void delete(Conversation conversation) {
-        jpaRepository.deleteById(conversation.getId());
+        UUID id = Objects.requireNonNull(conversation.getId(), "conversation id must not be null");
+        jpaRepository.deleteById(id);
     }
 
     private ConversationJpaEntity toEntity(Conversation domain) {
+        UUID conversationId = Objects.requireNonNull(domain.getId(), "conversation id must not be null");
         ConversationJpaEntity entity = new ConversationJpaEntity(
-            domain.getId(),
+            conversationId,
             domain.getCreatedAt(),
             domain.getLastUpdatedAt()
         );
 
         List<ConversationMessageJpaEntity> messageEntities = domain.getMessages().stream()
             .map(msg -> new ConversationMessageJpaEntity(
-                msg.getId(),
+                Objects.requireNonNull(msg.getId(), "message id must not be null"),
                 entity,
                 msg.getRole(),
                 msg.getContent(),

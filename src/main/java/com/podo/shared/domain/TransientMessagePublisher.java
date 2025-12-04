@@ -1,4 +1,4 @@
-package com.podo.shared.application;
+package com.podo.shared.domain;
 
 /**
  * Port for publishing transient messages (MQ, email, etc.) after DB commit.

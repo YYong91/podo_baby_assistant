@@ -6,8 +6,10 @@ import com.podo.shared.mediator.Request;
 /**
  * Request to add a message to an existing conversation.
  */
+import java.util.UUID;
+
 public record AddMessageRequest(
-    String conversationId,
+    UUID conversationId,
     String role,      // e.g., "user", "assistant"
     String content
 ) implements Request<ConversationResponse> {

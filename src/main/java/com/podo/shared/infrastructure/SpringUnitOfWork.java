@@ -1,8 +1,8 @@
 package com.podo.shared.infrastructure;
 
-import com.podo.shared.application.TransientMessagePublisher;
 import com.podo.shared.domain.DomainEvent;
 import com.podo.shared.domain.EntityBase;
+import com.podo.shared.domain.TransientMessagePublisher;
 import com.podo.shared.domain.UnitOfWork;
 import com.podo.shared.mediator.Mediator;
 import jakarta.persistence.EntityManager;
@@ -90,7 +90,7 @@ public class SpringUnitOfWork implements UnitOfWork {
      * Extracts managed entities from the current persistence context.
      * Uses Hibernate API if available, otherwise returns empty (fallback).
      */
-    private Iterable<Object> getManagedEntities() {
+    protected Iterable<Object> getManagedEntities() {
         try {
             org.hibernate.Session session = entityManager.unwrap(org.hibernate.Session.class);
             org.hibernate.engine.spi.PersistenceContext pc =

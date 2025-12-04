@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * JPA entity for Conversation persistence.
@@ -13,7 +14,8 @@ import java.util.List;
 public class ConversationJpaEntity {
 
     @Id
-    private String id;
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -28,13 +30,13 @@ public class ConversationJpaEntity {
     protected ConversationJpaEntity() {
     }
 
-    public ConversationJpaEntity(String id, LocalDateTime createdAt, LocalDateTime lastUpdatedAt) {
+    public ConversationJpaEntity(UUID id, LocalDateTime createdAt, LocalDateTime lastUpdatedAt) {
         this.id = id;
         this.createdAt = createdAt;
         this.lastUpdatedAt = lastUpdatedAt;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

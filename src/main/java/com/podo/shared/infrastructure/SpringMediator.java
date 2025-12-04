@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Spring-based Mediator implementation.
- * Automatically discovers and routes requests to their handlers.
+ * Automatically discovers and routes requests (including domain events) to their handlers.
  */
 @Component
 @RequiredArgsConstructor
@@ -25,15 +25,15 @@ public class SpringMediator implements Mediator {
     @Override
     @SuppressWarnings("unchecked")
     public <TResponse> TResponse send(Request<TResponse> request) {
-        RequestHandler<Request<TResponse>, TResponse> handler = 
-            (RequestHandler<Request<TResponse>, TResponse>) findHandler(request.getClass());
-        
+        RequestHandler<Request<TResponse>, TResponse> handler =
+                (RequestHandler<Request<TResponse>, TResponse>) findHandler(request.getClass());
+
         if (handler == null) {
             throw new IllegalStateException(
-                "No handler found for request: " + request.getClass().getName()
+                    "No handler found for request: " + request.getClass().getName()
             );
         }
-        
+
         return handler.handle(request);
     }
 
@@ -41,12 +41,12 @@ public class SpringMediator implements Mediator {
     private RequestHandler<?, ?> findHandler(Class<?> requestClass) {
         return handlerCache.computeIfAbsent(requestClass, clazz -> {
             Map<String, RequestHandler> handlers = applicationContext.getBeansOfType(RequestHandler.class);
-            
+
             for (RequestHandler handler : handlers.values()) {
                 Class<?>[] typeArgs = GenericTypeResolver.resolveTypeArguments(
-                    handler.getClass(), RequestHandler.class
+                        handler.getClass(), RequestHandler.class
                 );
-                
+
                 if (typeArgs != null && typeArgs.length > 0 && typeArgs[0].equals(requestClass)) {
                     return handler;
                 }
@@ -55,4 +55,3 @@ public class SpringMediator implements Mediator {
         });
     }
 }
-

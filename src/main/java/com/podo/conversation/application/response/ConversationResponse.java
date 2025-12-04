@@ -4,18 +4,19 @@ import com.podo.conversation.domain.Conversation;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Response DTO for conversation queries.
  */
 public record ConversationResponse(
-    String id,
+    UUID id,
     List<MessageResponse> messages,
     LocalDateTime createdAt,
     LocalDateTime lastUpdatedAt
 ) {
     public record MessageResponse(
-        String id,
+        UUID id,
         String role,
         String content,
         LocalDateTime createdAt

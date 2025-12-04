@@ -2,6 +2,7 @@ package com.podo.conversation.domain;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Repository port for Conversation aggregate.
@@ -11,7 +12,7 @@ public interface ConversationRepository {
 
     Conversation save(Conversation conversation);
 
-    Optional<Conversation> findById(String id);
+    Optional<Conversation> findById(UUID id);
 
     List<Conversation> findRecent(int limit);
 

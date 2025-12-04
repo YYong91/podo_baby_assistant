@@ -5,6 +5,7 @@ import com.podo.conversation.application.response.ConversationResponse;
 import com.podo.conversation.domain.Conversation;
 import com.podo.conversation.domain.ConversationRepository;
 import com.podo.shared.mediator.RequestHandler;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +23,10 @@ public class AddMessageHandler
     @Override
     @Transactional
     public ConversationResponse handle(AddMessageRequest request) {
-        Conversation conversation = conversationRepository.findById(request.conversationId())
+        UUID conversationId = request.conversationId();
+        Conversation conversation = conversationRepository.findById(conversationId)
             .orElseThrow(() -> new IllegalArgumentException(
-                "Conversation not found: " + request.conversationId()
+                "Conversation not found: " + conversationId
             ));
         
         conversation.addMessage(request.role(), request.content());

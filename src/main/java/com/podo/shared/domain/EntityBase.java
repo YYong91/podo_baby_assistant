@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import lombok.NonNull;
+
 /**
  * Abstract base class for all domain entities.
  * Provides UUID-based identity and equality semantics.
@@ -13,7 +15,7 @@ import java.util.UUID;
  */
 public abstract class EntityBase {
 
-    protected UUID id;
+    protected final UUID id;
     private final List<DomainEvent> domainEvents = new ArrayList<>();
 
     protected EntityBase() {
@@ -21,9 +23,10 @@ public abstract class EntityBase {
     }
 
     protected EntityBase(UUID id) {
-        this.id = id;
+        this.id = Objects.requireNonNull(id, "id must not be null");
     }
-
+    
+    @NonNull
     public UUID getId() {
         return id;
     }

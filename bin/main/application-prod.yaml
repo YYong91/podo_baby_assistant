@@ -1,0 +1,6 @@
+# application-prod.yml
+spring:
+  datasource:
+    url: jdbc:postgresql://podo-prod.xxxxx.ap-northeast-2.rds.amazonaws.com:5432/podo
+    username: podo_prod_user
+    password: ${PODO_DB_PASSWORD}

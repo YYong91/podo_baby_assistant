@@ -35,7 +35,7 @@ public class BabyLifeLogController {
     }
 
     @GetMapping("/{id}")
-    public BabyLifeLogResponse getById(@PathVariable @NonNull UUID id) {
+    public BabyLifeLogResponse getById(@PathVariable("id") @NonNull UUID id) {
         return mediator.send(new GetBabyLifeLogQuery(id));
     }
 }

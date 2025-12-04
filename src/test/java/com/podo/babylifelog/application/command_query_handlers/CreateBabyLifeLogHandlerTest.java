@@ -5,6 +5,7 @@ import com.podo.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.babylifelog.domain.BabyLifeLogRepository;
 import com.podo.babylifelog.domain.BabyLifeLogType;
+import com.podo.shared.domain.UnitOfWork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +24,14 @@ class CreateBabyLifeLogHandlerTest {
     @Mock
     private BabyLifeLogRepository repository;
 
+    @Mock
+    private UnitOfWork unitOfWork;
+
     private CreateBabyLifeLogHandler handler;
 
     @BeforeEach
     void setUp() {
-        handler = new CreateBabyLifeLogHandler(repository);
+        handler = new CreateBabyLifeLogHandler(repository, unitOfWork);
     }
 
     @Test

@@ -7,8 +7,10 @@ import java.time.LocalDateTime;
 /**
  * Response DTO for advice queries.
  */
+import java.util.UUID;
+
 public record AdviceResponse(
-    String id,
+    UUID id,
     String query,
     String content,
     LocalDateTime generatedAt

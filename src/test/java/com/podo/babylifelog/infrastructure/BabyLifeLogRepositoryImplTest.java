@@ -17,7 +17,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +28,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(BabyLifeLogRepositoryImpl.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BabyLifeLogRepositoryImplTest {
-
+    
+        
     @Container
     private static final PostgreSQLContainer<?> POSTGRES =
             new PostgreSQLContainer<>("postgres:16-alpine");
@@ -58,8 +61,9 @@ class BabyLifeLogRepositoryImplTest {
         );
 
         BabyLifeLogRecord saved = repository.save(toSave);
-        Optional<BabyLifeLogRecord> loaded = repository.findById(saved.getId());
-
+        UUID savedId = Objects.requireNonNull(saved.getId(), "id must not be null");
+        Optional<BabyLifeLogRecord> loaded = repository.findById(savedId);
+        assertThat(savedId).isEqualTo(toSave.getId());
         assertThat(saved.getId()).isEqualTo(toSave.getId());
         assertThat(loaded).isPresent();
         assertThat(loaded.get().getType()).isEqualTo(BabyLifeLogType.FEEDING);

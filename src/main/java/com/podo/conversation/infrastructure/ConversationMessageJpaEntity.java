@@ -2,6 +2,7 @@ package com.podo.conversation.infrastructure;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * JPA entity for ConversationMessage persistence.
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 public class ConversationMessageJpaEntity {
 
     @Id
-    private String id;
+    @Column(columnDefinition = "uuid")
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conversation_id", nullable = false)
@@ -29,7 +31,7 @@ public class ConversationMessageJpaEntity {
     protected ConversationMessageJpaEntity() {
     }
 
-    public ConversationMessageJpaEntity(String id, ConversationJpaEntity conversation,
+    public ConversationMessageJpaEntity(UUID id, ConversationJpaEntity conversation,
                                          String role, String content, LocalDateTime createdAt) {
         this.id = id;
         this.conversation = conversation;
@@ -38,7 +40,7 @@ public class ConversationMessageJpaEntity {
         this.createdAt = createdAt;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 

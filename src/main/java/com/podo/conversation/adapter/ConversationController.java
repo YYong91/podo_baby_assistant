@@ -8,6 +8,7 @@ import com.podo.conversation.application.response.ConversationListResponse;
 import com.podo.conversation.application.response.ConversationResponse;
 import com.podo.shared.mediator.Mediator;
 import lombok.RequiredArgsConstructor;
+import java.util.UUID;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,7 +29,7 @@ public class ConversationController {
 
     @PostMapping("/{conversationId}/messages")
     public ConversationResponse addMessage(
-        @PathVariable String conversationId,
+        @PathVariable UUID conversationId,
         @RequestBody AddMessageRequest request
     ) {
         // Create new request with path variable
@@ -41,7 +42,7 @@ public class ConversationController {
     }
 
     @GetMapping("/{conversationId}")
-    public ConversationResponse getConversation(@PathVariable String conversationId) {
+    public ConversationResponse getConversation(@PathVariable UUID conversationId) {
         return mediator.send(new GetConversationRequest(conversationId));
     }
 

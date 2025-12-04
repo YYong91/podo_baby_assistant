@@ -55,4 +55,4 @@ logs/
 log/
 
 ### Cache ###
-.cache/
+.cache/.vscode/
