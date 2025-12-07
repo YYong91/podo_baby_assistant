@@ -1,7 +1,8 @@
 package com.podo.shared.infrastructure;
 
-import com.podo.shared.domain.TransientMessagePublisher;
 import org.springframework.stereotype.Component;
+
+import com.podo.shared.kernel.application.TransientMessagePublisher;
 
 /**
  * No-op implementation of {@link TransientMessagePublisher}.

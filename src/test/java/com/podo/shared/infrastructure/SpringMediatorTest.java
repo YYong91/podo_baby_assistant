@@ -1,8 +1,10 @@
 package com.podo.shared.infrastructure;
 
-import com.podo.shared.domain.DomainEvent;
+import com.podo.shared.kernel.domain.DomainEvent;
 import com.podo.shared.mediator.Request;
 import com.podo.shared.mediator.RequestHandler;
+import com.podo.shared.mediator.SpringMediator;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

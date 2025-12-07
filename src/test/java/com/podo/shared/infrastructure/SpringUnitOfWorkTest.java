@@ -1,8 +1,8 @@
 package com.podo.shared.infrastructure;
 
-import com.podo.shared.domain.DomainEvent;
-import com.podo.shared.domain.EntityBase;
-import com.podo.shared.domain.TransientMessagePublisher;
+import com.podo.shared.kernel.application.TransientMessagePublisher;
+import com.podo.shared.kernel.domain.DomainEvent;
+import com.podo.shared.kernel.domain.EntityBase;
 import com.podo.shared.mediator.Mediator;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
