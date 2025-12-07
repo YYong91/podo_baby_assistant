@@ -1,87 +1,141 @@
 # 🍇 Podo Baby Assistant
-아기와의 하루를 자연스럽게 기록하고, 필요한 정보를 대화 형태로 받아볼 수 있는
-음성 기반 육아 어시스턴트 프로젝트입니다.
 
-“포도야, 오늘 낮잠 두 번 잤어”
-“포도야, 채이 뒤집기 언제 했어?”
+Podo Baby Assistant는 “포도야”라고 부르면  
+아기 상태 기록, 책·놀이 추천, 육아 Q&A를 음성으로 제공하는 **AI 육아 어시스턴트**입니다.
 
-이처럼 자연스러운 문장을 받아서 해석하고,
-아기의 생활 기록을 자동으로 남기거나 요약을 만들어주는 흐름을 목표로 하고 있습니다.
+---
 
-UI나 계정 시스템 같은 부가 기능보다는
-“입력된 문장 → 도메인 처리 → 응답 생성”
-이 핵심 파이프라인을 단단하게 만드는 데 집중하고 있습니다.
+## ✨ 주요 기능
 
-## 주요 기능 (개발 중)
+####  (개발중)
+- **육아일지 기록(BabyLog)**  
+  수면·식사·배변·건강·놀이 상황을 음성으로 바로 기록
 
-- 아기 생활 기록 관리 (낮잠, 성장 이벤트 등)
-- 기록된 이벤트 조회 및 마일스톤 조회
-- 특정 기간(일/주 단위) 요약 생성
-- 간단한 육아 조언 응답
+- **육아 Q&A / 대화(Interaction)**
 
-## 시스템 구조 (초기 버전)
-사용자의 발화(text)는 Message Orchestrator로 들어와  
-의도 분석을 거친 뒤 각 도메인 컨텍스트로 분기됩니다.
+- **아기 관련된 대화만 자동 저장**  
+  GPT가 intent/type/store 여부를 판단
 
-- Message Orchestrator: 메시지 입력 처리 및 도메인 라우팅
-- BabyLifeLog: 아기 이벤트 및 요약 데이터
-- Conversation: 대화 기록
-- Advice: LLM 기반 조언 및 요약 생성
-- PostgreSQL: 공통 저장소
-- LLM API: 조언·요약 생성
+#### (개발 예정)
+- **나이 기반 책/놀이/활동 추천(Content)(예정)**
+
+---
+
+## 🧠 전체 아키텍처
 
 ```mermaid
-flowchart LR
-    CL[🗣️ Client or Speaker] --> MO[Message Orchestrator]
-
-    MO --> BLL[🍼 BabyLifeLog]
-    MO --> CONV[💬 Conversation]
-    MO --> ADV[📘 Advice]
-
-    BLL --> DB[(PostgreSQL)]
-    CONV --> DB
-    ADV --> DB
-
-    ADV --> LLM[(LLM API)]
+graph TD
+    User[👨‍👩‍👧 User] --> Speaker[🔊 Podo Speaker Client]
+    Speaker --> STT[Whisper STT]
+    STT --> API[/POST /api/v1/orchestrate/]
+    API --> Orchestrator[🧠 MessageOrchestrator (core)]
+    Orchestrator --> Brain[🤖 BrainClient (GPT)]
+    Orchestrator --> Mediator[🔀 Mediator (shared)]
+    Mediator --> BabyLog[📘 BabyLog BC]
+    Mediator --> Content[📚 Content BC]
+    Mediator --> Interaction[💬 Interaction BC]
+    BabyLog --> DB[(PostgreSQL)]
+    Content --> DB
+    Interaction --> DB
+    Orchestrator --> Speaker
+    Speaker --> User
 ```
 
-## 기술 스택 (보완 예정)
+---
 
-### Backend
-- Java / Spring Boot 
-- Spring Web / Spring Data JPA  
-- PostgreSQL
-- Python3
-- JUnit5 / Mockito / AssertJ  
-- Testcontainers (PostgreSQL 통합 테스트)
+## 📦 패키지 구조
 
-### Architecture
-- Domain Driven Desgin(Hybrid)
-- 레이어드 아키텍처 (Application / Domain / Infrastructure)
-- Message Orchestrator를 통한 입력 메시지 라우팅
-- Swagger / Springdoc 기반 API 문서화 (도입 예정)
-
-### AI / NLP
-- Whisper STT (Python Lambda)  
-- GPT 기반 LLM API 연동  
-- 자연어 기반 이벤트 해석 및 요약 생성  
-- Prompt template 분리 및 관리
-
-### Infrastructure & DevOps
-- AWS(EC2, S3, RDS, ...)
-- Docker / Docker Compose  
-- GitHub Actions (CI)  
-
-필요에 따라 스택과 인프라는 계속 확장할 예정입니다.
-
-## 문서 구조
-
-설계와 상세 흐름은 docs/ 디렉토리에서 관리합니다.
 ```
-docs/
-├─ overview
-├─ usecases
-├─ domain
-├─ architecture
-└─ api
+com.podo.babyassistant
+  ├─ core/
+  │    ├─ orchestrator/
+  │    │     ├─ MessageOrchestrator.java
+  │    │     ├─ BrainClient.java
+  │    │     ├─ BrainResult.java
+  │    │     ├─ IntentType.java
+  │    │     └─ OrchestratorResult.java
+  │    └─ api/
+  │          └─ OrchestratorController.java
+  │
+  ├─ modules/
+  │    ├─ babylog/
+  │    │     ├─ application/
+  │    │     ├─ domain/
+  │    │     └─ infrastructure/
+  │    ├─ content/
+  │    └─ interaction/
+  │
+  ├─ shared/
+  │    ├─ kernel/                ← DDD Shared Kernel
+  │    │     ├─ domain/
+  │    │     │     ├─ DomainEvent.java
+  │    │     │     ├─ EntityBase.java
+  │    │     │     └─ ValueObjectBase.java
+  │    │     └─ application/
+  │    │           └─ UnitOfWork.java    ← 유즈케이스 트랜잭션 경계
+  │    │
+  │    ├─ mediator/              ← 기술적 패턴 (CQRS/Mediator)
+  │    │     ├─ Mediator.java
+  │    │     ├─ Request.java
+  │    │     ├─ RequestHandler.java
+  │    │     └─ SpringMediator.java
+  │    │
+  │    └─ infrastructure/        ← Spring 기반 구현체
+  │          ├─ SpringUnitOfWork.java
+  │          └─ NoOpTransientMessagePublisher.java
+  │
+  └─ PodoApplication.java
 ```
+
+
+## 🌐 주요 API
+
+### **POST /api/v1/orchestrate**
+
+텍스트(Whisper 결과)를 받아 intent 분석 + 유즈케이스 실행 후 답변 반환.
+
+**Request**
+```json
+{
+  "userId": "user-123",
+  "babyId": "baby-001",
+  "deviceId": "abc",
+  "conversationId": "conv-001",
+  "text": "오늘 채이는 소고기를 처음 먹었어",
+  "locale": "ko-KR",
+  "timestamp": "2025-01-01T10:00:00Z"
+}
+```
+
+**Response**
+```json
+{
+  "conversationId": "conv-001",
+  "replyText": "채이가 소고기를 처음 먹었군요! 일지에 기록해둘게요.",
+  "intent": "RECORD_BABY_LOG",
+  "isAboutBaby": true,
+  "shouldStoreConversation": true
+}
+```
+
+---
+
+## ⚙️ 환경 변수
+
+| 변수명 | 설명 |
+|-------|------|
+| `OPENAI_API_KEY` | GPT 호출 |
+| `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` | RDS |
+| `PODO_BABY_NAME` | 응답 커스터마이징 |
+| `PODO_ENV` | 실행 환경 |
+
+---
+
+## 🚀 CI/CD 개요
+
+- GitHub Actions  
+  - Gradle build/test  
+  - Docker build → ECR push  
+  - ECS Service update  
+
+---
