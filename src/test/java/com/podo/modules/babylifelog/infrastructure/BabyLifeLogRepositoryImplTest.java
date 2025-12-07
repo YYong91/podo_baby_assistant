@@ -15,8 +15,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.podo.modules.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.modules.babylifelog.domain.BabyLifeLogRepository;
 import com.podo.modules.babylifelog.domain.BabyLifeLogType;
-import com.podo.modules.babylifelog.infrastructure.BabyLifeLogJpaRepository;
-import com.podo.modules.babylifelog.infrastructure.BabyLifeLogRepositoryImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;

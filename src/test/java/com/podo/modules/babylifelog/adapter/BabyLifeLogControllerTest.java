@@ -1,6 +1,5 @@
 package com.podo.modules.babylifelog.adapter;
 
-import com.podo.modules.babylifelog.adapter.BabyLifeLogController;
 import com.podo.modules.babylifelog.application.commands.CreateBabyLifeLogCommand;
 import com.podo.modules.babylifelog.application.queries.GetAllBabyLifeLogsQuery;
 import com.podo.modules.babylifelog.application.queries.GetBabyLifeLogQuery;

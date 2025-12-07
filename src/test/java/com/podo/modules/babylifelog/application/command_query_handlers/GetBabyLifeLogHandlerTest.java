@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.podo.modules.babylifelog.application.command_query_handlers.GetBabyLifeLogHandler;
 import com.podo.modules.babylifelog.application.queries.GetBabyLifeLogQuery;
 import com.podo.modules.babylifelog.application.response.BabyLifeLogResponse;
 import com.podo.modules.babylifelog.domain.BabyLifeLogRecord;

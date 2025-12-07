@@ -2,9 +2,6 @@ package com.podo.modules.babylifelog.domain;
 
 import org.junit.jupiter.api.Test;
 
-import com.podo.modules.babylifelog.domain.BabyLifeLogRecord;
-import com.podo.modules.babylifelog.domain.BabyLifeLogType;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
