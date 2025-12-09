@@ -4,13 +4,13 @@ import com.podo.modules.babylifelog.application.queries.GetAllBabyLifeLogsQuery;
 import com.podo.modules.babylifelog.application.response.BabyLifeLogListResponse;
 import com.podo.modules.babylifelog.domain.BabyLifeLogRepository;
 import com.podo.shared.mediator.RequestHandler;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Handler for getting all baby life log entries.
  */
-@Component
+@Service
 @Transactional(readOnly = true)
 public class GetAllBabyLifeLogsHandler implements RequestHandler<GetAllBabyLifeLogsQuery, BabyLifeLogListResponse> {
 

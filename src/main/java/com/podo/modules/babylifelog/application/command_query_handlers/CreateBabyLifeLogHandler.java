@@ -6,13 +6,13 @@ import com.podo.modules.babylifelog.domain.BabyLifeLogRecord;
 import com.podo.modules.babylifelog.domain.BabyLifeLogRepository;
 import com.podo.shared.kernel.application.UnitOfWork;
 import com.podo.shared.mediator.RequestHandler;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Handler for recording a new baby life log entry.
  */
-@Component
+@Service
 @Transactional
 public class CreateBabyLifeLogHandler implements RequestHandler<CreateBabyLifeLogCommand, BabyLifeLogResponse> {
 
